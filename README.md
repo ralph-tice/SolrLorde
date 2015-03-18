@@ -2,4 +2,4 @@
 Cluster management service for Solr
 
 ![Solr, meet your your new overLorde]
-(https://flavorwire.files.wordpress.com/2014/04/lorde1.jpg)
+(https://pbs.twimg.com/media/BkBbYYlIUAAo2Ll.jpg:large)
