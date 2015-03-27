@@ -16,3 +16,6 @@ project/plugins/project/
 .scala_dependencies
 .worksheet
 .idea
+
+# the result of a CLUSTERSTATUS call:
+src/test/resources/clusterstate.json

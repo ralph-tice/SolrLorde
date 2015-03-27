@@ -3,6 +3,7 @@ package com.spredfast.solrlorde
 import com.codahale.metrics.MetricRegistry
 import org.apache.solr.client.solrj.impl.{CloudSolrClient}
 import org.apache.solr.common.cloud.{Replica, SolrZkClient}
+import org.json4s.jackson.Json
 import org.slf4j.LoggerFactory
 
 case class SolrCloud(name: String)
@@ -13,7 +14,11 @@ case class SolrResponse(status: Int, body: String, contentType: String)
 
 object SolrCollections {
   import scala.collection.JavaConverters._
-  val zkString        = System.getProperty("zkString", null)
+
+  val zkString = sys.props.get("zkString") match {
+    case Some(x) => x
+    case None => throw new Exception("zkString is required property")
+  }
   val zkClient = new SolrZkClient(zkString, 10000)
 
   // TODO: we should put a watch here so we can see new collections
@@ -41,17 +46,17 @@ class ClusterStateManager(metrics: MetricRegistry) {
   def health(solrCloudName: SolrCloud): SolrResponse = {
     val cloud = SolrCollections.solrServers.getOrElse(solrCloudName, None)
     cloud match {
-      case None =>
-        ClusterStateManager.CLOUD_NOT_FOUND_RESPONSE
       case server: CloudSolrClient =>
         val state = server.getZkStateReader.getClusterState
         val collections = state.getCollections
         SolrResponse(200, collectionsHealth(collections), "text/json")
+      case None => ClusterStateManager.CLOUD_NOT_FOUND_RESPONSE
     }
+    // val response = Http("http://localhost:8990/solr/admin/collections").param("action", "CLUSTERSTATUS").param("wt", "json").asString
   }
 
   private def collectionsHealth(collections: java.util.Set[String]): String = {
-    ""
 
+    val something = Json("")
   }
 }
